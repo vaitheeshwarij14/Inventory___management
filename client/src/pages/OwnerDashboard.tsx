@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,11 +7,9 @@ import { useToast } from "@/hooks/use-toast";
 const OwnerDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   // Check if user is logged in
-  React.useEffect(() => {
-    // In a real app with a backend, we would verify JWT tokens
-    // Here we're just checking if the user navigated properly
+  useEffect(() => {
     const path = window.location.pathname;
     if (!path.includes('owner-dashboard')) {
       toast({
@@ -74,6 +71,19 @@ const OwnerDashboard = () => {
                 variant="secondary"
               >
                 View Products
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* New Button: Analysis Dashboard */}
+          <Card className="hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <Button 
+                onClick={() => window.open("https://ml-api-2-c6ef.onrender.com/", "_blank")}
+                className="w-full py-8 text-xl"
+                variant="default"
+              >
+                Analysis Dashboard
               </Button>
             </CardContent>
           </Card>

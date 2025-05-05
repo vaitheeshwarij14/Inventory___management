@@ -53,7 +53,7 @@ const CustomerDashboard = () => {
     const fetchProducts = async () => {
       try {
 
-        const res = await fetch('https://9882-2409-40f4-315e-eff1-f92d-f48d-2c52-297a.ngrok-free.app/api/products',
+        const res = await fetch('  https://3670-103-196-28-179.ngrok-free.app/api/products',
           {
             headers: {
             'ngrok-skip-browser-warning': 'true'  // This bypasses the warning
