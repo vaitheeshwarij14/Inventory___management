@@ -13,11 +13,9 @@ const customerSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  }
+}, { timestamps: true });
 
-export const Customer = mongoose.model('Customer', customerSchema);
+const Customer = mongoose.model('Customer', customerSchema);
+
+export default Customer;  // Changed to export default

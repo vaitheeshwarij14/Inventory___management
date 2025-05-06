@@ -2,27 +2,43 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import productRoutes from './routes/productRoutes.js';
+import customerRoutes from './routes/customerRoutes.js';
+import productRoutes from './routes/productRoutes.js';  // Added product routes
 
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: ['https://localhost:8080','https://localhost'],
-  allowedHeaders: ['Content-Type', 'ngrok-skip-browser-warning']
-}));
-// app.options('*', cors());
+const PORT = process.env.PORT || 5000;
 
+// CORS configuration
+const corsOptions = {
+  origin: 'https://localhost:8080',  // Frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Allows cookies if needed
+  preflightContinue: false, // Ensures preflight request gets handled automatically
+};
+
+app.use(cors(corsOptions));  // Enable CORS with these options
 app.use(express.json());
 
-app.use('/api/products', productRoutes);
-app.use('/api',productRoutes)
-app.get('/', (req, res) => {
-  res.send('API is running...');
+// Routes
+app.use('/api/customers', customerRoutes);
+app.use('/api/products', productRoutes);  // Use product routes for /api/products
+
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('MongoDB connected');
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}).catch((err) => {
+  console.error('MongoDB connection failed:', err.message);
 });
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('MongoDB connected');
-    app.listen(3000,'0.0.0.0', () => console.log('Server running at http://localhost:3000'));
-  })
-  .catch(err => console.error('MongoDB connection error:', err));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
+});

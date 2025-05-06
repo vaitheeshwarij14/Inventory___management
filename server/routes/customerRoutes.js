@@ -1,62 +1,64 @@
+// customerRoutes.js
 import express from 'express';
-import { Customer } from '../models/customer.js';
-import bcrypt from 'bcryptjs'; // For password hashing
-
+import bcrypt from 'bcryptjs';
+import Customer from '../models/Customer.js';  // Changed to import syntax
 const router = express.Router();
 
-// Route for user registration
+// Register
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;  // Fixing 'username' to 'name'
+  const { name, email, password } = req.body;
 
   try {
-    // Check if the user already exists
-    const existingUser = await Customer.findOne({ email });
-    if (existingUser) {
+    const existing = await Customer.findOne({ email });
+    if (existing) {
       return res.status(400).json({ message: 'Email already in use' });
     }
 
-    // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
+    const customer = new Customer({ name, email, password: hashedPassword });
+    await customer.save();
 
-    // Create a new customer (corrected model name from 'User' to 'Customer')
-    const newUser = new Customer({
-      name,
-      email,
-      password: hashedPassword,
-    });
-
-    // Save the new customer
-    await newUser.save();
-
-    res.status(201).json({ message: 'User registered successfully', customer: newUser });
+    res.status(201).json({ message: 'Registration successful', customer });
   } catch (err) {
-    console.error('Error during registration:', err);
-    res.status(500).json({ message: 'Failed to register user' });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Route for login (added missing login route)
+// Login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if the user exists
-    const user = await Customer.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: 'User not found' });
+    const customer = await Customer.findOne({ email });
+    if (!customer) {
+      return res.status(400).json({ message: 'Customer not found' });
     }
 
-    // Compare the entered password with the stored hashed password
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, customer.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    res.status(200).json({ message: 'Login successful', customer: user });
+    res.json({ message: 'Login successful', customer });
   } catch (err) {
-    console.error('Error during login:', err);
-    res.status(500).json({ message: 'Login failed' });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-export default router;
+// Check if email exists
+router.post('/check', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const existingCustomer = await Customer.findOne({ email });
+    if (existingCustomer) {
+      res.status(200).json({ exists: true, customer: existingCustomer });
+    } else {
+      res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+export default router;  // Changed to export default
