@@ -25,7 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const CustomerLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -57,7 +57,7 @@ const CustomerLogin = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/customers/login', { email, password });
+      const res = await axios.post(`${apiUrl}/api/customers/login`, { email, password });
       toast({ title: "Login successful", description: `Welcome back, ${res.data.name}!` });
       localStorage.setItem('currentCustomer', JSON.stringify(res.data));
       navigate('/customer-dashboard');
@@ -72,7 +72,7 @@ const CustomerLogin = () => {
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/customers/check', { email: registerEmail });
+      const res = await axios.post(`${apiUrl}/api/customers/check`, { email: registerEmail });
       if (res.data.exists) {
         return toast({ title: "Account exists", description: "Try logging in.", variant: "destructive" });
       }
@@ -111,7 +111,7 @@ const CustomerLogin = () => {
     if (passwordError) return toast({ title: "Invalid Password", description: passwordError, variant: "destructive" });
 
     try {
-      const res = await axios.post('http://localhost:5000/api/customers/register', {
+      const res = await axios.post(`${apiUrl}/api/customers/register`, {
         name: registerName,
         email: registerEmail,
         password: registerPassword,

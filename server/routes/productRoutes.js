@@ -23,4 +23,40 @@ router.get('/', async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+// PUT /api/products/:id
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const update = req.body; // price, quantity, etc.
+    
+    const updated = await Product.findByIdAndUpdate(id, update, {
+      new: true,
+    });
+
+    if (!updated) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.json(updated);
+  } catch (err) {
+    console.error('Update error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+  router.delete('/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deleted = await Product.findByIdAndDelete(id);
+  
+      if (!deleted) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      res.json({ message: 'Product deleted successfully' });
+    } catch (err) {
+      console.error('Delete error:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
 export default router;

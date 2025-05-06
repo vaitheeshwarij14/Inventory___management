@@ -8,7 +8,7 @@ import { Search, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 interface Product {
   id: string;
   name: string;
@@ -53,7 +53,7 @@ const CustomerDashboard = () => {
     const fetchProducts = async () => {
       try {
 
-        const res = await fetch('  https://3670-103-196-28-179.ngrok-free.app/api/products',
+        const res = await fetch(`${apiUrl}/api/products`,
           {
             headers: {
             'ngrok-skip-browser-warning': 'true'  // This bypasses the warning
@@ -84,7 +84,7 @@ const CustomerDashboard = () => {
   const handleProductSelect = (product: Product) => {
     setSelectedProduct(product);
     setShowOrderDialog(true);
-    setOrderMessage(`Hello, I'm interested in purchasing "${product.name}" (ID: ${product.id}). Please provide details on availability and payment options.`);
+    setOrderMessage(`Hello, I'm interested in purchasing "${product.name}" (ID: ${product._id}). Please provide details on availability and payment options.`);
   };
 
   const handleOrderSubmit = () => {

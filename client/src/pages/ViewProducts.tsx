@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 interface Product {
   id: string;
   name: string;
@@ -22,7 +22,7 @@ const ViewProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('  https://3670-103-196-28-179.ngrok-free.app/api/products',
+        const res = await fetch(`${apiUrl}/api/products`,
           {
             headers: {
             'ngrok-skip-browser-warning': 'true'  // This bypasses the warning

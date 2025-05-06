@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const AddProduct = () => {
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState<number | ''>(0);
@@ -42,7 +42,7 @@ const AddProduct = () => {
       material
     };
 
-    await fetch('https://3670-103-196-28-179.ngrok-free.app/api/products/add', {
+    await fetch(`${apiUrl}/api/products/add`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newProduct)
