@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://localhost:8082','https://localhost'], // Frontend URL
+  origin: ['https://localhost:8080','https://localhost'], // Frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization','ngrok-skip-browser-warning'],
   credentials: true, 

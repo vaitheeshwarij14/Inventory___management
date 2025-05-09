@@ -7,8 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
 const apiUrl = import.meta.env.VITE_API_URL;
+
 const AddProduct = () => {
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState<number | ''>(0);
@@ -16,7 +17,6 @@ const AddProduct = () => {
   const [description, setDescription] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
   const [specificFields, setSpecificFields] = useState<string[]>([]);
-  const [material, setMaterial] = useState('');
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -29,7 +29,9 @@ const AddProduct = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const imageUrl = photo ? URL.createObjectURL(photo) : 'https://placehold.co/400x300?text=Product+Image';
+    const imageUrl = photo
+      ? URL.createObjectURL(photo)
+      : 'https://placehold.co/400x300?text=Product+Image';
 
     const newProduct = {
       name: productName,
@@ -38,8 +40,7 @@ const AddProduct = () => {
       description,
       photoUrl: imageUrl,
       createdAt: new Date().toISOString(),
-      specificFields,
-      material
+      specificFields
     };
 
     await fetch(`${apiUrl}/api/products/add`, {
@@ -61,7 +62,6 @@ const AddProduct = () => {
     setDescription('');
     setPhoto(null);
     setSpecificFields([]);
-    setMaterial('');
   };
 
   return (
@@ -83,7 +83,13 @@ const AddProduct = () => {
               {/* Product Name */}
               <div className="space-y-2">
                 <Label htmlFor="productName" className="font-bold">Product Name</Label>
-                <Input id="productName" placeholder="Enter product name" value={productName} onChange={(e) => setProductName(e.target.value)} required />
+                <Input
+                  id="productName"
+                  placeholder="Enter product name"
+                  value={productName}
+                  onChange={(e) => setProductName(e.target.value)}
+                  required
+                />
               </div>
 
               {/* Price */}
@@ -124,24 +130,14 @@ const AddProduct = () => {
                 <div className="grid grid-cols-2 gap-2">
                   {["9 x 5 vestti", "30*60 Towel", "cooltex Towels", "Printed Towels", "Pure White", "Muttu pett", "Parties"].map(field => (
                     <label key={field} className="flex items-center space-x-2">
-                      <Checkbox checked={specificFields.includes(field)} onCheckedChange={() => handleCheckboxChange(field)} />
+                      <Checkbox
+                        checked={specificFields.includes(field)}
+                        onCheckedChange={() => handleCheckboxChange(field)}
+                      />
                       <span>{field}</span>
                     </label>
                   ))}
                 </div>
-              </div>
-
-              {/* Material */}
-              <div className="space-y-2">
-                <Label className="font-bold">Material</Label>
-                <RadioGroup value={material} onValueChange={setMaterial}>
-                  {["cotten", "Polyester", "nylon"].map(type => (
-                    <div key={type} className="flex items-center space-x-2">
-                      <RadioGroupItem value={type} id={type} />
-                      <Label htmlFor={type}>{type}</Label>
-                    </div>
-                  ))}
-                </RadioGroup>
               </div>
 
               {/* Photo Upload */}
@@ -153,12 +149,20 @@ const AddProduct = () => {
               {/* Description */}
               <div className="space-y-2">
                 <Label htmlFor="description" className="font-bold">Description</Label>
-                <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} rows={4} required />
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={4}
+                  required
+                />
               </div>
             </CardContent>
 
             <CardFooter className="flex justify-between">
-              <Button type="button" variant="outline" onClick={() => navigate('/owner-dashboard')}>Cancel</Button>
+              <Button type="button" variant="outline" onClick={() => navigate('/owner-dashboard')}>
+                Cancel
+              </Button>
               <Button type="submit">Add Product</Button>
             </CardFooter>
           </form>
